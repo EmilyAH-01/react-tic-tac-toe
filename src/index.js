@@ -50,6 +50,7 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: Array(9).fill(null),
+        moveLocation: Array(2).fill(null)
       }],
       xIsNext: true,
       stepNumber: 0,
@@ -60,6 +61,8 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
+    var coordinates = calculateCoordinates(i);    
+    
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
@@ -67,6 +70,7 @@ class Game extends React.Component {
     this.setState({
       history: history.concat([{
         squares: squares,
+        moveLocation: coordinates
       }]),
       xIsNext: !this.state.xIsNext,
       stepNumber: history.length,
@@ -86,7 +90,7 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ? 'Go to move # ' + move : 'Go to game start';
+      const desc = move ? 'Go to move # ' + move + ' (Column ' + history[move].moveLocation[0] + ', Row ' + history[move].moveLocation[1] + ')' : 'Go to game start';
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
@@ -143,4 +147,40 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+// Added independently from tutorial: game now stores and displays 
+// coordinates of moves
+function calculateCoordinates(i) {
+  var coordinates;
+  // eslint-disable-next-line default-case
+  switch(i) {
+    case i = 0:
+      coordinates = [1,1]; // [col, row]
+      break;
+    case i = 1:
+      coordinates = [2,1];
+      break;
+    case i = 2:
+      coordinates = [3,1];
+      break;
+    case i = 3:
+      coordinates = [1,2]; 
+      break;
+    case i = 4:
+      coordinates = [2,2];
+      break;
+    case i = 5:
+      coordinates = [3,2];
+      break;
+    case i = 6:
+      coordinates = [1,3]; 
+      break;
+    case i = 7:
+      coordinates = [2,3];
+      break;
+    case i = 8:
+      coordinates = [3,3];
+  }
+  return coordinates;
 }
